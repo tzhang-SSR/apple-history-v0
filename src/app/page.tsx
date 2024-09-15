@@ -1,8 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import { useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import StockHistory from '@/components/stock-history'
 
 type TimelineEvent = {
   year: number;
@@ -54,14 +56,38 @@ function TimelineCard({ event }: { event: TimelineEvent }) {
 }
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState('timeline')
+
   return (
     <main className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold mb-12 text-center">苹果公司发展史</h1>
-      <div className="max-w-3xl mx-auto">
-        {events.map((event, index) => (
-          <TimelineCard key={index} event={event} />
-        ))}
+      
+      <div className="max-w-3xl mx-auto mb-8">
+        <div className="flex border-b border-gray-200">
+          <button
+            className={`py-2 px-4 font-medium ${activeTab === 'timeline' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
+            onClick={() => setActiveTab('timeline')}
+          >
+            时间线
+          </button>
+          <button
+            className={`py-2 px-4 font-medium ${activeTab === 'stock' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
+            onClick={() => setActiveTab('stock')}
+          >
+            股票历史
+          </button>
+        </div>
       </div>
+
+      {activeTab === 'stock' ? (
+        <StockHistory />
+      ) : (
+        <div className="max-w-3xl mx-auto">
+          {events.map((event, index) => (
+            <TimelineCard key={index} event={event} />
+          ))}
+        </div>
+      )}
     </main>
   )
 }
