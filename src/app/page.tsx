@@ -1,101 +1,67 @@
-import Image from "next/image";
+'use client'
+
+import { useEffect } from 'react'
+import { motion, useAnimation } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+
+type TimelineEvent = {
+  year: number;
+  title: string;
+  description: string;
+}
+
+const events: TimelineEvent[] = [
+  { year: 2015, title: "Apple Watch上市", description: "苹果进入可穿戴设备市场，推出了Apple Watch。" },
+  { year: 2010, title: "iPad发布", description: "苹果推出了iPad，定义了平板电脑市场。" },
+  { year: 2007, title: "iPhone发布", description: "苹果推出了第一代iPhone，开创了智能手机时代。" },
+  { year: 2001, title: "iPod问世", description: "苹果发布了iPod，彻底改变了人们听音乐的方式。" },
+  { year: 1984, title: "Macintosh发布", description: "苹果推出了革命性的Macintosh个人电脑，配备图形用户界面和鼠标。" },
+  { year: 1976, title: "苹果公司成立", description: "史蒂夫·乔布斯、史蒂夫·沃兹尼亚克和罗纳德·韦恩在加利福尼亚州创立了苹果电脑公司。" },
+]
+
+function TimelineCard({ event }: { event: TimelineEvent }) {
+  const controls = useAnimation()
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  })
+
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible')
+    }
+  }, [controls, inView])
+
+  return (
+    <motion.div
+      ref={ref}
+      animate={controls}
+      initial="hidden"
+      variants={{
+        visible: { opacity: 1, y: 0 },
+        hidden: { opacity: 0, y: 50 }
+      }}
+      transition={{ duration: 0.5 }}
+      className="mb-8"
+    >
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-3xl font-bold mb-4 text-blue-600">{event.year}</h2>
+        <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
+        <p className="text-gray-600">{event.description}</p>
+      </div>
+    </motion.div>
+  )
+}
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    <main className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <h1 className="text-4xl font-bold mb-12 text-center">苹果公司发展史</h1>
+      <div className="max-w-3xl mx-auto">
+        {events.map((event, index) => (
+          <TimelineCard key={index} event={event} />
+        ))}
+      </div>
+    </main>
+  )
 }
